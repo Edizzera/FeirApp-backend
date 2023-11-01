@@ -24,7 +24,6 @@ public class FairController {
     @Inject
     private final FairRepository fairRepository;
     @GET
-    // @Produces(MediaType.APPLICATION_JSON)
     public List<Fair> findAll() {
         return fairRepository.listAll(null);
     }
@@ -43,6 +42,9 @@ public class FairController {
         Fair newFair = new Fair();
         newFair.setName(inFair.getName());
         newFair.setAddres(inFair.getAddres());
+        newFair.setWeekDay(inFair.getWeekDay());
+        newFair.setStart(inFair.getStart());
+        newFair.setEnd(inFair.getEnd());
         fairRepository.persist(newFair);
         return newFair;
     }

@@ -29,6 +29,7 @@ public class Fair extends PanacheEntity {
 
     private String name;
     private Address addres;
-
-
+    private WeekDay weekDay;
+    private String start;
+    private String end;
 }
