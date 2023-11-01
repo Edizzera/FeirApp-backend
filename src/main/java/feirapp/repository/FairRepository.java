@@ -5,6 +5,6 @@ import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
-public class FairRepository  implements PanacheRepository<Fair>{
+public class FairRepository implements PanacheRepository<Fair>{
     
 }

@@ -2,12 +2,12 @@ package feirapp.api.controller;
 
 import java.util.List;
 
-import feirapp.api.dto.InFair;
 import feirapp.model.Fair;
 import feirapp.repository.FairRepository;
 import feirapp.service.FairService;
 import jakarta.enterprise.inject.Produces;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -38,16 +38,19 @@ public class FairController {
     }
 
     @POST
-    public Fair create(InFair inFair) {
-        Fair newFair = new Fair(1,"Nova Feira",new Fair.Address("Duque de Caxias","Centro Histórico",1234));
+    @Transactional
+    public Fair create(Fair inFair) {
+        Fair newFair = new Fair();
+        newFair.setName(inFair.getName());
+        newFair.setAddres(inFair.getAddres());
         fairRepository.persist(newFair);
         return newFair;
     }
 
     @DELETE
+    @Path("/{id}")
     public void delete(Long id) {
         fairRepository.deleteById(id);
-
     }
 
     
