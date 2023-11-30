@@ -1,15 +1,19 @@
 package feirapp.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
+@AllArgsConstructor
 public enum WeekDay {
-    DOMINGO,
-    SEGUNDA,
-    TERCA,
-    QUARTA,
-    QUINTA,
-    SEXTA,
-    SABADO;
+    DOMINGO("DOMINGO"),
+    SEGUNDA("SEGUNDA"),
+    TERCA("TERCA"),
+    QUARTA("QUARTA"),
+    QUINTA("QUINTA"),
+    SEXTA("SEXTA"),
+    SABADO("SABADO");
+
+    private final String value;
     
 }

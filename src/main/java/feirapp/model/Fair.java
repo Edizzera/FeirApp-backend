@@ -3,6 +3,8 @@ package feirapp.model;
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -28,7 +30,10 @@ import lombok.Setter;
 public class Fair extends PanacheEntity {
 
     private String name;
+    @Enumerated(EnumType.STRING)
+    private Category category;
     private Address addres;
+    @Enumerated(EnumType.STRING)
     private WeekDay weekDay;
     private String start;
     private String end;
