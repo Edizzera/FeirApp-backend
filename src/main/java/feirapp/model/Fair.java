@@ -32,7 +32,7 @@ public class Fair extends PanacheEntity {
     private String name;
     @Enumerated(EnumType.STRING)
     private Category category;
-    private Address addres;
+    private Address address;
     @Enumerated(EnumType.STRING)
     private WeekDay weekDay;
     private String start;

@@ -2,8 +2,11 @@ package feirapp.api.controller;
 
 import java.util.List;
 
+import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
+
 import feirapp.model.Fair;
 import feirapp.model.FairFilter;
+import feirapp.model.PropertiesHelper;
 import feirapp.repository.FairRepository;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -11,9 +14,12 @@ import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import lombok.AllArgsConstructor;
 
 @Path("/api/v1/fairs")
@@ -24,14 +30,27 @@ public class FairController {
     private final FairRepository fairRepository;
     @GET
     public List<Fair> findAll() {
-        return fairRepository.listAll(null);
+        return fairRepository.listAll();
     }
     
     @GET
-    @Path("/weekday")
+    @Path("/search")
     @Consumes(MediaType.APPLICATION_JSON)
     public List<Fair> findFairByWeekDay(FairFilter filter) {
             return fairRepository.findByFilter(filter);
+    }
+
+    @PUT
+    @Transactional
+    @Path("/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response update(@PathParam("id") Long id, @RequestBody Fair fair) {
+        Fair existingFair = fairRepository.findById(id);
+        PropertiesHelper.copyNonNullProperties(fair, existingFair);
+        fairRepository.persist(existingFair);
+
+        return Response.ok(existingFair).build();
     }
 
     @POST
@@ -39,7 +58,7 @@ public class FairController {
     public Fair create(Fair inFair) {
         Fair newFair = new Fair();
         newFair.setName(inFair.getName());
-        newFair.setAddres(inFair.getAddres());
+        newFair.setAddress(inFair.getAddress());
         newFair.setCategory(inFair.getCategory());
         newFair.setWeekDay(inFair.getWeekDay());
         newFair.setStart(inFair.getStart());
