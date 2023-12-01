@@ -4,19 +4,15 @@ import java.util.List;
 
 import feirapp.model.Fair;
 import feirapp.model.FairFilter;
-import feirapp.model.Search;
-import feirapp.model.WeekDay;
 import feirapp.repository.FairRepository;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-import jakarta.ws.rs.BeanParam;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import lombok.AllArgsConstructor;
 
