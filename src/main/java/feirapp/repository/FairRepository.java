@@ -3,32 +3,36 @@ package feirapp.repository;
 import java.util.List;
 
 import feirapp.model.Fair;
-import feirapp.model.Search;
-import feirapp.model.WeekDay;
+import feirapp.model.FairFilter;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.persistence.TypedQuery;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 @ApplicationScoped
 public class FairRepository implements PanacheRepository<Fair> {
-   public List<Fair> findByWeekDay(Search search) {
-    String jpql = "from Fair c where 1=1";
+   @PersistenceContext
+    EntityManager em;
+    public List<Fair> findByFilter(FairFilter filter) {
+        String jpql = "SELECT f FROM Fair f WHERE 1 = 1";
 
-    if (search.getName() != null) {
-        jpql += " and c.name = :name";        
-    }
-    if (search.getWeekDay() != null) {
-        jpql += " and c.weekDay = :weekDay";
-        
-    }
+        if (filter.getWeekDay() != null) {
+            jpql += " AND f.weekDay = :weekDay";
+        }
+        if (filter.getCategory() != null) {
+            jpql += " AND f.category = :category";
+        }
 
-    TypedQuery<Fair> query = getEntityManager().createQuery(jpql, Fair.class);
-        if (search.getName() != null) {
-        query.setParameter("name", search.getName());
-        query.setParameter("weekDay", search.getWeekDay());       
-       
+        var query = em.createQuery(jpql, Fair.class);
+
+        if (filter.getWeekDay() != null) {
+            query.setParameter("weekDay", filter.getWeekDay());
+        }
+        if (filter.getCategory() != null) {
+            query.setParameter("category", filter.getCategory());
+        }
+
+        return query.getResultList();
     }
-    return query.getResultList();
-   }
     
 }

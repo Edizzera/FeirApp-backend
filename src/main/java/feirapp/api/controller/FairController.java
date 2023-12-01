@@ -3,13 +3,13 @@ package feirapp.api.controller;
 import java.util.List;
 
 import feirapp.model.Fair;
+import feirapp.model.FairFilter;
 import feirapp.model.Search;
 import feirapp.model.WeekDay;
 import feirapp.repository.FairRepository;
-import feirapp.service.FairService;
-import jakarta.enterprise.inject.Produces;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
+import jakarta.ws.rs.BeanParam;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -34,9 +34,8 @@ public class FairController {
     @GET
     @Path("/weekday")
     @Consumes(MediaType.APPLICATION_JSON)
-    public List<Fair> findFairById(Search search) {
-            return fairRepository.findByWeekDay(search);
-
+    public List<Fair> findFairByWeekDay(FairFilter filter) {
+            return fairRepository.findByFilter(filter);
     }
 
     @POST
@@ -56,7 +55,6 @@ public class FairController {
     @DELETE
     @Path("/{id}")
     @Transactional
-
     public void delete(@PathParam("id") Long id) {
         fairRepository.deleteById(id);
     }
