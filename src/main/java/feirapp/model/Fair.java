@@ -37,4 +37,6 @@ public class Fair extends PanacheEntity {
     private WeekDay weekDay;
     private String start;
     private String end;
+    private double latitude;
+    private double longitude;
 }
