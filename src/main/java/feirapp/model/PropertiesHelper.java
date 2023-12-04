@@ -8,7 +8,7 @@ import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class PropertiesHelper {
-    
+
     public static void copyNonNullProperties(Object source, Object destination) {
         if (source == null || destination == null) {
             throw new IllegalArgumentException("Source and destination objects must not be null");
@@ -32,9 +32,19 @@ public class PropertiesHelper {
                         continue;
                     }
                     destinationField.setAccessible(true);
-                    destinationField.set(destination, value);
+
+                    if (destinationField.getType().isAnnotationPresent(jakarta.persistence.Embeddable.class)) {
+                        Object destValue = destinationField.get(destination);
+                        if (destValue == null) {
+                            destValue = destinationField.getType().newInstance();
+                            destinationField.set(destination, destValue);
+                        }
+                        copyNonNullProperties(value, destValue);
+                    } else {
+                        destinationField.set(destination, value);
+                    }
                 }
-            } catch (IllegalAccessException e) {
+            } catch (IllegalAccessException | InstantiationException e) {
                 throw new RuntimeException("Could not copy properties from source to destination", e);
             }
         }

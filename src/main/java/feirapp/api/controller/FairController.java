@@ -1,12 +1,15 @@
 package feirapp.api.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 
 import feirapp.model.Fair;
 import feirapp.model.FairFilter;
+// import feirapp.model.Favorite;
 import feirapp.model.PropertiesHelper;
+// import feirapp.model.User;
 import feirapp.repository.FairRepository;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -28,12 +31,13 @@ public class FairController {
     
     @Inject
     private final FairRepository fairRepository;
+
     @GET
     public List<Fair> findAll() {
         return fairRepository.listAll();
     }
     
-    @GET
+    @POST
     @Path("/search")
     @Consumes(MediaType.APPLICATION_JSON)
     public List<Fair> findFairByWeekDay(FairFilter filter) {
@@ -56,15 +60,22 @@ public class FairController {
     @POST
     @Transactional
     public Fair create(Fair inFair) {
-        Fair newFair = new Fair();
-        newFair.setName(inFair.getName());
-        newFair.setAddress(inFair.getAddress());
-        newFair.setCategory(inFair.getCategory());
-        newFair.setWeekDay(inFair.getWeekDay());
-        newFair.setStart(inFair.getStart());
-        newFair.setEnd(inFair.getEnd());
-        fairRepository.persist(newFair);
-        return newFair;
+        try {
+            Fair newFair = new Fair();
+            newFair.setName(inFair.getName());
+            newFair.setAddress(inFair.getAddress());
+            newFair.setCategory(inFair.getCategory());
+            newFair.setWeekDay(inFair.getWeekDay());
+            newFair.setStart(inFair.getStart());
+            newFair.setEnd(inFair.getEnd());
+            newFair.setLatitude(inFair.getLatitude());
+            newFair.setLongitude(inFair.getLongitude());
+            fairRepository.persist(newFair);
+            return newFair;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
     }
 
     @DELETE
@@ -73,6 +84,5 @@ public class FairController {
     public void delete(@PathParam("id") Long id) {
         fairRepository.deleteById(id);
     }
-
     
 }

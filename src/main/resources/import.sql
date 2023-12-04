@@ -164,3 +164,4 @@ values("Feira Ecológica Auxiliadora",-30.0209120821295, -51.19688738102493,'TER
 insert into `Fair`(name,latitude, longitude,weekDay,Category, start,end,street, district, number) 
 values("Centro Administrativo Municipal Guilherme Socias Villela",-30.029760338154965, -51.23399920028864,'QUINTA','ECOLOGICA', "07:30","11:30","Rua General João Manoel", "Centro Histórico",157);
 
+
