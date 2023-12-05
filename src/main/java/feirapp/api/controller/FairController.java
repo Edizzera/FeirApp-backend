@@ -1,16 +1,8 @@
 package feirapp.api.controller;
 
 import java.util.List;
-import java.util.Optional;
-
-import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
-
 import feirapp.model.Fair;
 import feirapp.model.FairFilter;
-// import feirapp.model.Favorite;
-import feirapp.model.PropertiesHelper;
-// import feirapp.model.User;
-import feirapp.repository.FairRepository;
 import feirapp.service.FairService;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
