@@ -1,66 +1,84 @@
-# feirapp-backend
+# Feirapp-backend
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+Este projeto é uma aplicação Quarkus que gerencia feiras. A aplicação permite criar, atualizar, buscar e deletar feiras.
 
-If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
+## Plano de Testes
 
-## Running the application in dev mode
+Abaixo estão descritos os testes implementados no projeto:
 
-You can run your application in dev mode that enables live coding using:
-```shell script
-./mvnw compile quarkus:dev
-```
+### Testes de Componentes (API)
 
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at http://localhost:8080/q/dev/.
+#### `FairControllerTest`
 
-## Packaging and running the application
+- `testFindAllEndpoint()`
+  - **Descrição**: Testa o endpoint de busca de todas as feiras.
+  - **Entrada**: GET request para `/api/v1/fairs`.
+  - **Saída Esperada**: Status 200 OK e corpo da resposta não vazio.
 
-The application can be packaged using:
-```shell script
-./mvnw package
-```
-It produces the `quarkus-run.jar` file in the `target/quarkus-app/` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/quarkus-app/lib/` directory.
+- `testFindFairByWeekDayEndpoint()`
+  - **Descrição**: Testa o endpoint de busca de feiras por dia da semana e categoria.
+  - **Entrada**: POST request para `/api/v1/fairs/search` com filtro `FairFilter`.
+  - **Saída Esperada**: Status 200 OK e corpo da resposta não vazio.
 
-The application is now runnable using `java -jar target/quarkus-app/quarkus-run.jar`.
+- `testUpdateEndpoint()`
+  - **Descrição**: Testa o endpoint de atualização de uma feira.
+  - **Entrada**: PUT request para `/api/v1/fairs/{id}` com um objeto `Fair` e ID da feira.
+  - **Saída Esperada**: Status 200 OK e ID da feira no corpo da resposta.
 
-If you want to build an _über-jar_, execute the following command:
-```shell script
-./mvnw package -Dquarkus.package.type=uber-jar
-```
+- `testCreateEndpoint()`
+  - **Descrição**: Testa o endpoint de criação de uma nova feira.
+  - **Entrada**: POST request para `/api/v1/fairs` com um objeto `Fair`.
+  - **Saída Esperada**: Status 200 OK e nome da feira no corpo da resposta.
 
-The application, packaged as an _über-jar_, is now runnable using `java -jar target/*-runner.jar`.
+- `testDeleteEndpoint()`
+  - **Descrição**: Testa o endpoint de deleção de uma feira.
+  - **Entrada**: DELETE request para `/api/v1/fairs/{id}` com ID da feira.
+  - **Saída Esperada**: Status 204 No Content.
 
-## Creating a native executable
+### Testes Unitários
 
-You can create a native executable using: 
-```shell script
-./mvnw package -Dnative
-```
+#### `FairServiceTest`
 
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using: 
-```shell script
-./mvnw package -Dnative -Dquarkus.native.container-build=true
-```
+- `findAll_ShouldReturnListOfFairs()`
+  - **Descrição**: Testa se o serviço retorna uma lista de feiras.
+  - **Entrada**: Chamada do método `findAll()`.
+  - **Saída Esperada**: Lista não nula e não vazia contendo feiras.
 
-You can then execute your native executable with: `./target/feirapp-backend-1.0.0-SNAPSHOT-runner`
+- `findFairByWeekDay_ShouldReturnFilteredFairs()`
+  - **Descrição**: Testa se o serviço retorna feiras filtradas por dia da semana.
+  - **Entrada**: Chamada do método `findFairByWeekDay()` com filtro `FairFilter`.
+  - **Saída Esperada**: Lista não nula e não vazia contendo feiras.
 
-If you want to learn more about building native executables, please consult https://quarkus.io/guides/maven-tooling.
+- `update_ShouldUpdateFair()`
+  - **Descrição**: Testa se o serviço atualiza uma feira.
+  - **Entrada**: Chamada do método `update()` com ID da feira e objeto `Fair`.
+  - **Saída Esperada**: Feira atualizada com o novo nome.
 
-## Related Guides
+- `create_ShouldCreateFair()`
+  - **Descrição**: Testa se o serviço cria uma nova feira.
+  - **Entrada**: Chamada do método `create()` com um objeto `Fair`.
+  - **Saída Esperada**: Feira persistida no repositório.
 
-- Hibernate ORM ([guide](https://quarkus.io/guides/hibernate-orm)): Define your persistent model with Hibernate ORM and Jakarta Persistence
-- Hibernate Validator ([guide](https://quarkus.io/guides/validation)): Validate object properties (field, getter) and method parameters for your beans (REST, CDI, Jakarta Persistence)
-- Hibernate ORM with Panache ([guide](https://quarkus.io/guides/hibernate-orm-panache)): Simplify your persistence code for Hibernate ORM via the active record or the repository pattern
-- JDBC Driver - MySQL ([guide](https://quarkus.io/guides/datasource)): Connect to the MySQL database via JDBC
+- `delete_ShouldDeleteFair()`
+  - **Descrição**: Testa se o serviço deleta uma feira.
+  - **Entrada**: Chamada do método `delete()` com ID da feira.
+  - **Saída Esperada**: Feira deletada do repositório.
 
-## Provided Code
+## Verificação Estática
 
-### Hibernate ORM
+Para garantir a qualidade do código, implementamos análise estática utilizando as ferramentas PMD e/ou SonarQube. Essas ferramentas são configuradas para rodar automaticamente no pipeline de CI/CD ou diretamente no código.
 
-Create your first JPA entity
+## Testes de Sistema
 
-[Related guide section...](https://quarkus.io/guides/hibernate-orm)
+Para testes de sistema, foi utilizado a  ferramenta Selenium para simular interações do usuário com a aplicação em um ambiente que se assemelha à produção.
 
-[Related Hibernate with Panache section...](https://quarkus.io/guides/hibernate-orm-panache)
+## Integração Contínua (CI/CD)
 
+O projeto está configurado com GitHub Actions para automatizar o processo de integração contínua. O pipeline inclui as seguintes etapas:
+
+- Instalação de dependências
+- Execução de testes unitários e de componentes
+- Análise estática de código
+- Build do projeto
+
+O arquivo de configuração `.github/workflows/build.yml` contém todas as definições necessárias para o pipeline de CI/CD.
