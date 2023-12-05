@@ -11,6 +11,7 @@ import feirapp.model.FairFilter;
 import feirapp.model.PropertiesHelper;
 // import feirapp.model.User;
 import feirapp.repository.FairRepository;
+import feirapp.service.FairService;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.Consumes;
@@ -28,61 +29,42 @@ import lombok.AllArgsConstructor;
 @Path("/api/v1/fairs")
 @AllArgsConstructor
 public class FairController {
-    
     @Inject
-    private final FairRepository fairRepository;
+    FairService fairService;
 
     @GET
     public List<Fair> findAll() {
-        return fairRepository.listAll();
+        return fairService.findAll();
     }
-    
+
     @POST
     @Path("/search")
     @Consumes(MediaType.APPLICATION_JSON)
     public List<Fair> findFairByWeekDay(FairFilter filter) {
-            return fairRepository.findByFilter(filter);
+        return fairService.findFairByWeekDay(filter);
     }
 
     @PUT
-    @Transactional
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response update(@PathParam("id") Long id, @RequestBody Fair fair) {
-        Fair existingFair = fairRepository.findById(id);
-        PropertiesHelper.copyNonNullProperties(fair, existingFair);
-        fairRepository.persist(existingFair);
-
-        return Response.ok(existingFair).build();
+    @Transactional
+    public Response update(@PathParam("id") Long id, Fair fair) {
+        Fair updatedFair = fairService.update(id, fair);
+        return Response.ok(updatedFair).build();
     }
 
     @POST
     @Transactional
     public Fair create(Fair inFair) {
-        try {
-            Fair newFair = new Fair();
-            newFair.setName(inFair.getName());
-            newFair.setAddress(inFair.getAddress());
-            newFair.setCategory(inFair.getCategory());
-            newFair.setWeekDay(inFair.getWeekDay());
-            newFair.setStart(inFair.getStart());
-            newFair.setEnd(inFair.getEnd());
-            newFair.setLatitude(inFair.getLatitude());
-            newFair.setLongitude(inFair.getLongitude());
-            fairRepository.persist(newFair);
-            return newFair;
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw e;
-        }
+        return fairService.create(inFair);
     }
 
     @DELETE
     @Path("/{id}")
     @Transactional
     public void delete(@PathParam("id") Long id) {
-        fairRepository.deleteById(id);
+        fairService.delete(id);
     }
     
 }
