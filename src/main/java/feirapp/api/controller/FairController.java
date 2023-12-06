@@ -25,6 +25,7 @@ public class FairController {
     FairService fairService;
 
     @GET
+    @Produces(MediaType.APPLICATION_JSON)
     public List<Fair> findAll() {
         return fairService.findAll();
     }
